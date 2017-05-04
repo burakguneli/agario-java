@@ -10,7 +10,7 @@ public class MainCircle extends Component{
     public int y;
     public int size;
     public static Color color;
-    public static MainCircle blob = new MainCircle(800,100,40);
+    public static MainCircle blob = new MainCircle(650,450,40);
     MainCircle(int x, int y, int size){
         this.x = x;
         this.y = y;
