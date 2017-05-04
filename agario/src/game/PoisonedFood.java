@@ -18,7 +18,7 @@ public class PoisonedFood extends Component{
         int green = 0;
         int blue = 0;
         this.c = new Color(red,green,blue);
-        this.size = 100;
+        this.size = 60;
     }
     public void paint(Graphics g){
         g.setColor(c);

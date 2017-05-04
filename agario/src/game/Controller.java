@@ -14,7 +14,7 @@ public class Controller {
     public ArrayList<Food> dots = new ArrayList<Food>();
     public ArrayList<PoisonedFood> Poisoneddots = new ArrayList<PoisonedFood>();
     MainCircle b = new MainCircle(50,50,40);
-    MyFrame frame = new MyFrame("Agario");
+    GameFrame frame = new GameFrame("Agario");
     Label l = new Label("0");
     int mouseX = 0;
     int mouseY = 0;
@@ -42,27 +42,28 @@ public class Controller {
                 b.y += yDis / sizeIncrease;
 
                 while(control_point==0){
-	                for(int i = 0; i < 30; i++){
-	                    int randX = r.nextInt(1300);
-	                    int randY = r.nextInt(900);
-	                    Food d = new Food(randX,randY);
-	                    synchronized(dots){
-	                        dots.add(d);
-	                    }
-	                	frame.add(d);
-	                	
-	                	randX = r.nextInt(1300);
-	                    randY = r.nextInt(900);
-	                	
+	                for(int i = 0; i < 30; i++) {
+
+                        int randX = r.nextInt(1300);
+                        int randY = r.nextInt(800);
+
+                        Food d = new Food(randX, randY);
+                        dots.add(d);
+                        frame.add(d);
+                    }
+                    for(int i = 0; i < 5; i++){
+
+	                	int randX = r.nextInt(1300);
+	                    int randY = r.nextInt(800);
+
 	                	PoisonedFood pd = new PoisonedFood(randX,randY);
-	                    synchronized(Poisoneddots){
-	                        Poisoneddots.add(pd);
-	                    }
+                        Poisoneddots.add(pd);
 	                	frame.add(pd);
+
 	                    control_point = 1;
 	                }
-	                frame.repaint();
-                }          
+                }
+                frame.repaint();
             }catch(Exception e){
 
             }
@@ -78,7 +79,7 @@ public class Controller {
                         Rectangle r1 = new Rectangle(d.x,d.y,d.size,d.size);
                         if(r1.intersects(r)){ //yeme kismi
                         	dots.remove(i);
-                            b.size += 4;
+                            b.size += 10;
                             l.setText(String.valueOf(Integer.parseInt(l.getText())+1));
                             score += 1;
                         }
@@ -90,7 +91,7 @@ public class Controller {
 	                    Rectangle r1 = new Rectangle(pd.x,pd.y,pd.size,pd.size);
 	                    if(r1.intersects(r)){ //poison yeme kismi
 	                    	Poisoneddots.remove(i);
-	                        b.size -= 3;
+	                        b.size -= 15;
 	                        l.setText(String.valueOf(Integer.parseInt(l.getText())+1));
 	                        score -= 1;
 	                    }
@@ -108,9 +109,9 @@ public class Controller {
             yDis = mouseY-b.y;
         }
     }
-    class MyFrame extends Frame{
+    class GameFrame extends Frame{
 		private static final long serialVersionUID = -7346138389831648823L;
-		MyFrame(String s){
+        GameFrame(String s){
             super(s);
             setBounds(0,0,1400,1000);
             add(b);
