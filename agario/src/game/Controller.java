@@ -1,10 +1,7 @@
 package game;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Graphics;
-import java.awt.Label;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
@@ -15,7 +12,7 @@ public class Controller {
     public ArrayList<PoisonedFood> Poisoneddots = new ArrayList<PoisonedFood>();
     MainCircle b = new MainCircle(650,450,40);
     MyFrame GameFrame = new MyFrame();
-    Label l = new Label("0");
+    JLabel label = new JLabel("0");
     int mouseX = 0;
     int mouseY = 0;
     static int score = 0;
@@ -28,7 +25,7 @@ public class Controller {
     }
     public void startGame(){
         GameFrame.getContentPane().addMouseMotionListener(new MyMouseMoveListener());
-        GameFrame.getContentPane().add(l,BorderLayout.NORTH);
+        GameFrame.getContentPane().add(label,BorderLayout.NORTH);
         Refresh refresh = new Refresh();
         Thread t = new Thread(refresh);
         t.start();
@@ -69,7 +66,6 @@ public class Controller {
 	                    control_point = 1;
 	                }
                 }
-                GameFrame.getContentPane().repaint();
             }catch(Exception e){}
         }
     }
@@ -83,7 +79,7 @@ public class Controller {
                     if(dotsRectangle.intersects(blobsRectangle)){ //yeme kismi
                         dots.remove(i);
                         b.size += 10;
-                        l.setText(String.valueOf(Integer.parseInt(l.getText())+1));
+                        label.setText(String.valueOf(Integer.parseInt(label.getText())+1));
                         score += 1;
                     }
                 }
@@ -92,8 +88,8 @@ public class Controller {
                     Rectangle poisonedDotsRectangle = new Rectangle(pd.x,pd.y,pd.size,pd.size);
                     if(poisonedDotsRectangle.intersects(blobsRectangle)){ //poison yeme kismi
                         Poisoneddots.remove(i);
-                        b.size -= 15;
-                        l.setText(String.valueOf(Integer.parseInt(l.getText())+1));
+                        b.size -= 30;
+                        label.setText(String.valueOf(Integer.parseInt(label.getText())-1));
                         score -= 1;
                     }
                 }
@@ -109,30 +105,7 @@ public class Controller {
             yDis = mouseY - b.y;
 
         }
-    }/*
-    class MainFrame extends Frame{
-		private static final long serialVersionUID = -7346138389831648823L;
-        MainFrame(String s){
-            super(s);
-            setBounds(0,0,1400,1000);
-            add(b);
-            setVisible(true);
-        }
-        public void paint(Graphics g){
-            b.paint(g);
-            l.paint(g);
-            synchronized(dots){
-                for(Food food : dots){
-                    food.paint(g);
-                }
-            }
-            synchronized(Poisoneddots){
-	            for(PoisonedFood pd : Poisoneddots){
-	            	pd.paint(g);
-	            }
-            }
-        }
-    }*/
+    }
 
     public class MyFrame extends JFrame{
 
