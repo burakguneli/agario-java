@@ -13,6 +13,7 @@ public class Controller {
     MainCircle b = new MainCircle(650,450,40);
     MyFrame GameFrame = new MyFrame();
     JLabel label = new JLabel("0");
+    JLabel userName = new JLabel();
     int mouseX = 0;
     int mouseY = 0;
     static int score = 0;
@@ -24,12 +25,14 @@ public class Controller {
         new Controller().startGame();
     }
     public void startGame(){
+        String name = JOptionPane.showInputDialog(GameFrame, "What's your name?");
+        userName.setText(name);
         GameFrame.getContentPane().addMouseMotionListener(new MyMouseMoveListener());
         GameFrame.getContentPane().add(label,BorderLayout.NORTH);
+        GameFrame.getContentPane().add(userName,BorderLayout.SOUTH);
         Refresh refresh = new Refresh();
         Thread t = new Thread(refresh);
         t.start();
-
         while(true){
             try{
                 Random r = new Random();
@@ -44,7 +47,9 @@ public class Controller {
                     b.y = 450;
                 }
 
+
                 while(control_point==0){
+
 	                for(int i = 0; i < 30; i++) {
 
                         int randX = r.nextInt(1300);
@@ -66,8 +71,10 @@ public class Controller {
 	                    control_point = 1;
 	                }
                 }
+
             }catch(Exception e){}
         }
+
     }
     class Refresh implements Runnable{
         public void run() {
@@ -81,6 +88,11 @@ public class Controller {
                         b.size += 10;
                         label.setText(String.valueOf(Integer.parseInt(label.getText())+1));
                         score += 1;
+
+                        if(dots.size()==0){
+                            JOptionPane.showMessageDialog(null, "Kazandiniz", "Oyun Sonu", JOptionPane.INFORMATION_MESSAGE);
+                            System.exit(0);
+                        }
                     }
                 }
                 for (int i=0; i < Poisoneddots.size(); i++) {
@@ -89,6 +101,12 @@ public class Controller {
                     if(poisonedDotsRectangle.intersects(blobsRectangle)){ //poison yeme kismi
                         Poisoneddots.remove(i);
                         b.size -= 30;
+
+                        if(b.size < 1){
+                            JOptionPane.showMessageDialog(null, "Cok Fazla Poison Yedin", "Oyun Sonu", JOptionPane.INFORMATION_MESSAGE);
+                            System.exit(0);
+                        }
+
                         label.setText(String.valueOf(Integer.parseInt(label.getText())-1));
                         score -= 1;
                     }
@@ -103,7 +121,6 @@ public class Controller {
             mouseY = m.getY();
             xDis = mouseX - b.x;
             yDis = mouseY - b.y;
-
         }
     }
 
