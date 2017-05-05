@@ -19,6 +19,9 @@ public class Food extends Component{
         int blue = rand.nextInt(255);
         this.c = new Color(red,green,blue);
         this.size = rand.nextInt(50);
+        while(this.size<25){
+            this.size = rand.nextInt(50);
+        }
     }
     public void paint(Graphics g){
         g.setColor(c);

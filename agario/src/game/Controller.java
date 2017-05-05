@@ -10,16 +10,19 @@ import java.util.Random;
 public class Controller {
     public ArrayList<Food> dots = new ArrayList<Food>();
     public ArrayList<PoisonedFood> Poisoneddots = new ArrayList<PoisonedFood>();
-    MainCircle b = new MainCircle(650,450,40);
+    MainCircle hero = new MainCircle(650,450,40);
     MyFrame GameFrame = new MyFrame();
     JLabel label = new JLabel("0");
     JLabel userName = new JLabel();
+    JLabel LabelSpeed = new JLabel();
     int mouseX = 0;
     int mouseY = 0;
     static int score = 0;
-    static int xDis = 0;
-    static int yDis = 0;
+    static int xDistance = 0;
+    static int yDistance = 0;
+    double eatCount = 0.1;
     double speed = 40;
+    double calculatedSpeed = 0;
     int control_point = 0;
     public static void main(String[] args){
         new Controller().startGame();
@@ -27,9 +30,11 @@ public class Controller {
     public void startGame(){
         String name = JOptionPane.showInputDialog(GameFrame, "What's your name?");
         userName.setText(name);
+        LabelSpeed.setText(String.valueOf(calculatedSpeed));
         GameFrame.getContentPane().addMouseMotionListener(new MyMouseMoveListener());
         GameFrame.getContentPane().add(label,BorderLayout.NORTH);
-        GameFrame.getContentPane().add(userName,BorderLayout.SOUTH);
+        GameFrame.getContentPane().add(userName,BorderLayout.NORTH);
+        GameFrame.getContentPane().add(LabelSpeed,BorderLayout.NORTH);
         Refresh refresh = new Refresh();
         Thread t = new Thread(refresh);
         t.start();
@@ -38,15 +43,16 @@ public class Controller {
                 Random r = new Random();
                 Thread.sleep(r.nextInt(10));
 
-                boolean control_point2 = b.x <1300 && b.x >0 && b.y<850 && b.y >0;
+                boolean control_point2 = hero.x <1300 && hero.x >0 && hero.y<850 && hero.y >0;
                 if(control_point2 == true) {
-                    b.x += xDis / speed;
-                    b.y += yDis / speed;
+                    hero.x += xDistance / speed / eatCount;
+                    hero.y += yDistance / speed / eatCount;
+                    calculatedSpeed = speed / eatCount;
+                    LabelSpeed.setText(String.valueOf(calculatedSpeed));
                 }else{
-                    b.x = 750;
-                    b.y = 450;
+                    hero.x = 700;
+                    hero.y = 400;
                 }
-
 
                 while(control_point==0){
 
@@ -79,15 +85,16 @@ public class Controller {
     class Refresh implements Runnable{
         public void run() {
             while(true){
-                Rectangle blobsRectangle = new Rectangle(b.x, b.y, b.size, b.size);
+                Rectangle blobsRectangle = new Rectangle(hero.x, hero.y, hero.size, hero.size);
                 for (int i=0; i < dots.size(); i++) {
                     Food food = dots.get(i);
                     Rectangle dotsRectangle = new Rectangle(food.x, food.y, food.size, food.size);
                     if(dotsRectangle.intersects(blobsRectangle)){ //yeme kismi
                         dots.remove(i);
-                        b.size += 10;
+                        hero.size += 10;
                         label.setText(String.valueOf(Integer.parseInt(label.getText())+1));
                         score += 1;
+                        eatCount +=0.2;
 
                         if(dots.size()==0){
                             JOptionPane.showMessageDialog(null, "Kazandiniz", "Oyun Sonu", JOptionPane.INFORMATION_MESSAGE);
@@ -100,9 +107,9 @@ public class Controller {
                     Rectangle poisonedDotsRectangle = new Rectangle(pd.x,pd.y,pd.size,pd.size);
                     if(poisonedDotsRectangle.intersects(blobsRectangle)){ //poison yeme kismi
                         Poisoneddots.remove(i);
-                        b.size -= 30;
+                        hero.size -= 30;
 
-                        if(b.size < 1){
+                        if(hero.size < 1){
                             JOptionPane.showMessageDialog(null, "Cok Fazla Poison Yedin", "Oyun Sonu", JOptionPane.INFORMATION_MESSAGE);
                             System.exit(0);
                         }
@@ -119,8 +126,8 @@ public class Controller {
         public void mouseMoved(MouseEvent m){
             mouseX = m.getX();
             mouseY = m.getY();
-            xDis = mouseX - b.x;
-            yDis = mouseY - b.y;
+            xDistance = mouseX - hero.x;
+            yDistance = mouseY - hero.y;
         }
     }
 
@@ -135,14 +142,14 @@ public class Controller {
 
             setSize(1400, 900);
 
-            add(b);
+            add(hero);
 
             setVisible(true);
         }
 
         class DrawPane extends JPanel{
             public void paintComponent(Graphics g){
-                b.paint(g);
+                hero.paint(g);
                 synchronized(dots){
                     for(Food food : dots){
                         food.paint(g);
