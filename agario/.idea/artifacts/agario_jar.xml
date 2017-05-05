@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="agario:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/agario_jar</output-path>
+    <root id="archive" name="agario.jar">
+      <element id="module-output" name="agario" />
+    </root>
+  </artifact>
+</component>
